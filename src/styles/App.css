@@ -3,15 +3,18 @@
 	padding: 0;
 	box-sizing: border-box;
 }
-:root{
+#root{
 	display: flex;
 	justify-content: center;
 }
-.App{
-	width: 800px;
+.app{
+	width: 600px;
 }
-.App h2{
+.app h2{
 	text-align: center;
+}
+.main{
+    margin-top: 15px;
 }
 .post{
 	display: flex;
@@ -22,5 +25,5 @@
 	margin-top: 15px;
 }
 .post__content{
-	
+
 }
