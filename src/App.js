@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PostFilter } from "./components/PostFilter";
 import PostForm from "./components/PostForm";
 import PostList from "./components/PostList";
 import MyButton from "./components/UI/Button/MyButton";
 import { MyModal } from "./components/UI/Modal/MyModal";
 import { usePosts } from "./hooks/usePosts";
-import axios from "axios";
 
 
 import "./styles/App.css";
+import PostService from "./components/API/PostService";
+import Loader from "./components/UI/Loader/Loader";
+import { useFetching } from "./hooks/useFetching";
 
 function App() {
     const [posts, setPosts] = useState([
@@ -20,7 +22,17 @@ function App() {
 	const [filter, setFilter] = useState({sort: '', query: ''})
 	const [modal, setModal] = useState(false)
 	const sortedAndSearchPosts = usePosts(posts, filter.sort, filter.query)
+	const [fetchPosts, isPostsLoading, postError] = useFetching(async() => {
+		const posts = await PostService.getAll()
+			setPosts(posts)
+	})
 
+	useEffect(() => {
+		fetchPosts()
+		return () => {
+			
+		}
+	}, [])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost]);
@@ -31,23 +43,16 @@ function App() {
         setPosts(posts.filter((p) => p.id !== post.id));
     };
 
-	async function fetchPosts(){
-		const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
-
-        })
- 		setPosts(response.data)
-	}
-
     return (
         <div className="app">
 			<hr />
 			<div className="search">
-			<MyButton onClick={() => setModal(true)}>
-				Создать пост
-			</MyButton>
-			<MyButton onClick={fetchPosts}>
-				Получить посты
-			</MyButton>
+				<MyButton onClick={() => setModal(true)}>
+					Создать пост
+				</MyButton>
+				<MyButton onClick={fetchPosts}>
+					Получить посты
+				</MyButton>
 			</div>
 			<hr />
 			<MyModal visible={modal} setVisible={setModal}>
@@ -57,11 +62,18 @@ function App() {
 				filter={filter}
 				setFilter={setFilter}
 			/>
-			<PostList
-				remove={removePost}
-				posts={sortedAndSearchPosts}
-				title="Список постов 1"
-			/>
+			{postError &&
+				<h2>Произошла ошибка ${postError}</h2>
+			}
+			{isPostsLoading
+				? <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}><Loader /></div>
+				: <PostList
+					remove={removePost}
+					posts={sortedAndSearchPosts}
+					title="Список постов 1"
+				/>
+			}
+			
         </div>
     );
 }
