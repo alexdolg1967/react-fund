@@ -18,8 +18,15 @@
     color: brown;
     margin-top: 15px;
 }
+.app hr{
+	margin: 15px 0;
+}
 .main{
     margin-top: 15px;
+}
+.search{
+	display: flex;
+	align-items: center;
 }
 .post{
 	display: flex;

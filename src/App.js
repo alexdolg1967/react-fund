@@ -1,14 +1,33 @@
 import React, { useState } from "react";
 import PostForm from "./components/PostForm";
 import PostList from "./components/PostList";
+import MyInput from "./components/UI/Input/MyInput";
+import { MySelect } from "./components/UI/Select/MySelect";
 import "./styles/App.css";
 
 function App() {
     const [posts, setPosts] = useState([
         { id: 1, title: "Javascript 1", body: "Description full news" },
-        { id: 2, title: "Javascript 2", body: "Description full news" },
-        { id: 3, title: "Javascript 3", body: "Description full news" },
+        { id: 2, title: "Pyton 2", body: " full news" },
+        { id: 3, title: "Delphi 3", body: " news" },
     ]);
+
+	const [selectedSort, setSelectedSort] = useState('')
+	const [searchQuery, setSearchQuery] = useState('')
+
+	function getSortedPosts(){
+		console.log('Отработалла функция сортед постс')
+		if (selectedSort) {
+			return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
+		}
+		return posts
+	}
+
+	const sortedPosts = getSortedPosts()
+
+	const sortPosts = (sort) => {
+		setSelectedSort(sort)
+	}
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost]);
@@ -21,10 +40,27 @@ function App() {
     return (
         <div className="app">
             <PostForm create={createPost} />
+			<hr/>
+			<div className="search">
+				<MyInput
+					value={searchQuery}
+					onChange={e => setSearchQuery(e.target.value)}
+					placeholder="Поиск..."
+				/>
+				<MySelect className="my_select"
+					value={selectedSort}
+					onChange={sortPosts}
+					defaultValue="Сортировка " 
+					options={[
+						{value: 'title', name: 'По названию'},
+						{value: 'body', name: 'По описанию'},
+					]}
+				/>
+			</div>
             {posts.length !== 0 ? (
                 <PostList
                     remove={removePost}
-                    posts={posts}
+                    posts={sortedPosts}
                     title="Список постов 1"
                 />
             ) : (
