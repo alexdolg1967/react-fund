@@ -37,6 +37,7 @@
 	align-items: center;
 	padding: 15px;
 	border: 2px solid teal;
+    border-radius: 5px;
 	margin-top: 15px;
 }
 .post__content{
@@ -54,4 +55,25 @@
 .post-exit-active {
   transform: translateX(-350px);
   transition: all 500ms ease-in;
+}
+.pagination{
+    display: flex;
+    padding: 15px 0;
+    gap: 5px;
+}
+.pagination .page{
+    padding: 10px;
+    border: 1px solid teal;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.pagination .page:hover,
+.pagination .page:active{
+    background: teal;
+    color: white;
+}
+.pagination .page.current{
+    background: turquoise;
+    border: 2px solid orange;
+    font-weight: 600;
 }
