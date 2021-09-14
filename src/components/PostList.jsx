@@ -2,6 +2,11 @@ import React from 'react'
 import PostItem from './PostItem'
 
 function PostList({posts, title, remove}) {
+	if (!posts.length) {
+		return (
+			<h3>Посты не найдены!</h3>
+		)
+	}
     return (
         <div className="main">
             <h2>{title}</h2>
