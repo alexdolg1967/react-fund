@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { PostFilter } from "./components/PostFilter";
 import PostForm from "./components/PostForm";
 import PostList from "./components/PostList";
 import MyButton from "./components/UI/Button/MyButton";
 import { MyModal } from "./components/UI/Modal/MyModal";
 import { usePosts } from "./hooks/usePosts";
+import axios from "axios";
 
 
 import "./styles/App.css";
@@ -30,12 +31,24 @@ function App() {
         setPosts(posts.filter((p) => p.id !== post.id));
     };
 
+	async function fetchPosts(){
+		const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+
+        })
+ 		setPosts(response.data)
+	}
+
     return (
         <div className="app">
 			<hr />
+			<div className="search">
 			<MyButton onClick={() => setModal(true)}>
 				Создать пост
 			</MyButton>
+			<MyButton onClick={fetchPosts}>
+				Получить посты
+			</MyButton>
+			</div>
 			<hr />
 			<MyModal visible={modal} setVisible={setModal}>
 				<PostForm create={createPost} />
