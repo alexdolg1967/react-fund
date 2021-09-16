@@ -56,7 +56,6 @@ export function Posts() {
 
     return (
         <div className="main">
-            <hr />
             <div className="search">
                 <MyButton onClick={() => setModal(true)}>Создать пост</MyButton>
                 <MyButton onClick={fetchPosts}>Получить посты</MyButton>

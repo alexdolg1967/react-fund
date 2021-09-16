@@ -7,6 +7,7 @@ import {
 import { About } from "../pages/About";
 import { Posts } from "../pages/Posts";
 import { Error } from "../pages/Error";
+import { PostIdPage } from '../pages/PostIdPage';
 
 export const AppRouter = () => {
     return (
@@ -14,13 +15,16 @@ export const AppRouter = () => {
             <Route path="/about">
                 <About />
             </Route>
-            <Route path="/posts">
+            <Route exact path="/posts">
                 <Posts />
+            </Route>
+            <Route exact path="/posts/:id">
+                <PostIdPage />
             </Route>
             <Route path="/error">
                 <Error />
             </Route>
-            <Redirect to="/error" />
+            <Redirect to="/posts" />
         </Switch>
     )
 }
