@@ -35,16 +35,18 @@ export const PostIdPage = () => {
             <br />
             <div>{post.body}</div>
             <hr />
-            <h4>Комментарии</h4>
-            <hr />
+            <h4 style={{marginBottom: 10}}>Комментарии</h4>
             {isComLoading ? (
                 <Loader />
             ) : (
                 <div>
                     {comments.map((comm) => (
-                        <div style={{ marginTop: 15 }}>
-                            <h5>{comm.email}</h5>
-                            <div>{comm.body}</div>
+                        <div className="comm">
+							<div className="comm_header">
+	                            <h5>{comm.name}</h5>
+	                            <h5>{comm.email}</h5>
+							</div>
+                            <div className="comm_body">{comm.body}</div>
                         </div>
                     ))}
                 </div>
