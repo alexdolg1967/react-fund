@@ -5,7 +5,7 @@ import MyButton from '../Button/MyButton';
 
 export const Navbar = () => {
 
-	const {isAuth, setIsAuth} = useContext(AuthContext)
+	const {setIsAuth} = useContext(AuthContext)
 
 	const logout = () => {
         setIsAuth(false);
