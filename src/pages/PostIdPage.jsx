@@ -42,7 +42,7 @@ export const PostIdPage = () => {
                 <div>
                     {comments.map((comm) => (
                         <div className="comm">
-							<div className="comm_header">
+							<div key={comm.id} className="comm_header">
 	                            <h5>{comm.name}</h5>
 	                            <h5>{comm.email}</h5>
 							</div>
