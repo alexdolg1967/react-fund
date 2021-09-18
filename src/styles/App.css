@@ -22,7 +22,7 @@
 	margin: 15px 0;
 }
 .main{
-    margin-top: 40px;
+    margin-top: 45px;
 	padding: 15px 0;
 }
 .navbar{
@@ -36,6 +36,7 @@
     align-items: center;
     padding: 0 15px;
 	border-bottom: 1px solid teal;
+    background: white;
 }
 .navbar__links{
     display: flex;
