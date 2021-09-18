@@ -11,6 +11,7 @@ import Loader from "../components/UI/Loader/Loader";
 import { useFetching } from "../hooks/useFetching";
 import { getPageCount } from "../utils/pages";
 import { Pagination } from "../components/UI/Pagination/Pagination";
+import { useObserver } from "../hooks/useObserver";
 
 export function Posts() {
     const [posts, setPosts] = useState([
@@ -26,7 +27,9 @@ export function Posts() {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
-	const observer = useRef()
+
+	const lastElement = useRef()
+	
 
     const [fetchPosts, isPostsLoading, postError] = useFetching(
         async (limit, page) => {
@@ -37,19 +40,9 @@ export function Posts() {
         }
     );
 
-	useEffect(() => {
-		if (isPostsLoading) return;
-		if (observer.current) observer.current.disconnect();
-		var callback = function (entries, observer) {
-			if (entries[0].isIntersecting && page < totalPages) {
-				
-				console.log(page);
-				setPage(page + 1)
-			}
-        };
-        observer.current = new IntersectionObserver(callback);
-        observer.current.observe(document.querySelector("#lastElement"));
-	}, [isPostsLoading])
+	useObserver(lastElement, page < totalPages, isPostsLoading, () =>{
+		setPage(page + 1)
+	})
 
     useEffect(() => {
         fetchPosts(limit, page);
@@ -87,7 +80,7 @@ export function Posts() {
                 posts={sortedAndSearchPosts}
                 title="Список постов 1"
             />
-			<div id="lastElement" style={{height: 20, background: 'red'}}></div>
+			<div ref={lastElement} style={{height: 20, background: 'red'}}></div>
 
             {isPostsLoading && (
                 <div
