@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { PostFilter } from "../components/PostFilter";
 import PostForm from "../components/PostForm";
 import PostList from "../components/PostList";
@@ -26,24 +26,34 @@ export function Posts() {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
-
-    const changePage = (page) => {
-        setPage(page);
-        fetchPosts(limit, page);
-    };
+	const observer = useRef()
 
     const [fetchPosts, isPostsLoading, postError] = useFetching(
         async (limit, page) => {
             const response = await PostService.getAll(limit, page);
-            setPosts(response.data);
+            setPosts([...posts, ...response.data]);
             const totalCount = response.headers["x-total-count"];
             setTotalPages(getPageCount(totalCount, limit));
         }
     );
 
+	useEffect(() => {
+		if (isPostsLoading) return;
+		if (observer.current) observer.current.disconnect();
+		var callback = function (entries, observer) {
+			if (entries[0].isIntersecting && page < totalPages) {
+				
+				console.log(page);
+				setPage(page + 1)
+			}
+        };
+        observer.current = new IntersectionObserver(callback);
+        observer.current.observe(document.querySelector("#lastElement"));
+	}, [isPostsLoading])
+
     useEffect(() => {
         fetchPosts(limit, page);
-    }, [page, limit]);
+    }, [page]);
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost]);
@@ -52,6 +62,11 @@ export function Posts() {
 
     const removePost = (post) => {
         setPosts(posts.filter((p) => p.id !== post.id));
+    };
+
+	const changePage = (page) => {
+        setPage(page);
+        fetchPosts(limit, page);
     };
 
     return (
@@ -66,7 +81,15 @@ export function Posts() {
             </MyModal>
             <PostFilter filter={filter} setFilter={setFilter} />
             {postError && <h2>Произошла ошибка ${postError}</h2>}
-            {isPostsLoading ? (
+
+            <PostList
+                remove={removePost}
+                posts={sortedAndSearchPosts}
+                title="Список постов 1"
+            />
+			<div id="lastElement" style={{height: 20, background: 'red'}}></div>
+
+            {isPostsLoading && (
                 <div
                     style={{
                         display: "flex",
@@ -76,13 +99,8 @@ export function Posts() {
                 >
                     <Loader />
                 </div>
-            ) : (
-                <PostList
-                    remove={removePost}
-                    posts={sortedAndSearchPosts}
-                    title="Список постов 1"
-                />
             )}
+
             <Pagination
                 page={page}
                 changePage={changePage}
