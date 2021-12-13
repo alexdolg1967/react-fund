@@ -28,8 +28,7 @@ export function Posts() {
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
 
-	const lastElement = useRef()
-	
+    const lastElement = useRef();
 
     const [fetchPosts, isPostsLoading, postError] = useFetching(
         async (limit, page) => {
@@ -40,9 +39,9 @@ export function Posts() {
         }
     );
 
-	useObserver(lastElement, page < totalPages, isPostsLoading, () =>{
-		setPage(page + 1)
-	})
+    useObserver(lastElement, page < totalPages, isPostsLoading, () => {
+        setPage(page + 1);
+    });
 
     useEffect(() => {
         fetchPosts(limit, page);
@@ -57,7 +56,7 @@ export function Posts() {
         setPosts(posts.filter((p) => p.id !== post.id));
     };
 
-	const changePage = (page) => {
+    const changePage = (page) => {
         setPage(page);
         fetchPosts(limit, page);
     };
@@ -78,9 +77,12 @@ export function Posts() {
             <PostList
                 remove={removePost}
                 posts={sortedAndSearchPosts}
-                title="Список постов 1"
+                title="Список постов"
             />
-			<div ref={lastElement} style={{height: 20, background: 'red'}}></div>
+            <div
+                ref={lastElement}
+                style={{ height: 20, background: "red" }}
+            ></div>
 
             {isPostsLoading && (
                 <div
